@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="night">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEDGER_OS — daily tracker</title>
+<meta name="description" content="A personal daily habit, task and money tracker. Local, private, free.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css?v=20">
+</head>
+<body>
+
+<div id="preloader" aria-hidden="true">
+  <div class="pl-word">
+    <span class="pl-mark"></span>
+    <span class="pl-letter" style="--i:0">L</span>
+    <span class="pl-letter" style="--i:1">E</span>
+    <span class="pl-letter" style="--i:2">D</span>
+    <span class="pl-letter" style="--i:3">G</span>
+    <span class="pl-letter" style="--i:4">E</span>
+    <span class="pl-letter" style="--i:5">R</span>
+    <span class="pl-letter" style="--i:6">_</span>
+  </div>
+  <div class="pl-boot">Booting <b>DAILY&nbsp;MODULE</b></div>
+</div>
+
+<div id="nameOverlay">
+  <div class="name-card">
+    <span class="label">Auth required</span>
+    <h2>Welcome to your ledger.</h2>
+    <p>Enter your callsign to initialize the daily module.</p>
+    <form id="nameForm">
+      <input id="userNameIn" maxlength="24" placeholder="Your name" autocomplete="name" aria-label="Your name">
+      <button class="btn-save" type="submit">Init</button>
+    </form>
+    <small>Your name stays in this browser only.</small>
+  </div>
+</div>
+
+<div class="toast" id="toast" aria-live="polite"></div>
+
+<div class="wrap">
+
+  <nav class="topbar">
+    <div class="row">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span class="brand-name">LEDGER<span class="blink">_</span></span>
+      </div>
+      <span class="nav-date" id="navDate">—</span>
+      <div class="toolbar">
+        <button class="theme-btn" data-theme-btn="night">Night</button>
+        <button class="theme-btn" data-theme-btn="ember">Ember</button>
+        <button class="theme-btn" data-theme-btn="ocean">Ocean</button>
+        <button class="name-chip" id="changeNameBtn" title="Change name">OP <b id="nameChipText"></b> &#9998;</button>
+      </div>
+    </div>
+  </nav>
+
+  <div id="viewDash">
+
+  <header class="hero">
+    <div class="hero-left">
+      <span class="hero-kicker" id="greeting">Good day.</span>
+      <span class="hero-big" id="dateMain">—</span>
+      <span class="hero-sub" id="dateSub">—</span>
+    </div>
+  </header>
+
+  <section class="kpis">
+    <div class="kpi"><span class="kpi-v" id="netToday">—</span><span class="kpi-k">Net today</span></div>
+    <div class="kpi"><span class="kpi-v hot" id="curStreak">0</span><span class="kpi-k">Current streak</span></div>
+    <div class="kpi"><span class="kpi-v" id="bestStreak">0</span><span class="kpi-k">Best streak</span></div>
+    <div class="kpi"><span class="kpi-v" id="weekChecks">0</span><span class="kpi-k">Checks this week</span></div>
+    <div class="kpi"><span class="kpi-v" id="totalChecks">0</span><span class="kpi-k">All-time checks</span></div>
+  </section>
+
+  <main class="grid">
+
+    <section class="col-main">
+      <div class="sec-head">
+        <span>Habits</span>
+        <span class="count" id="habitCount"></span>
+        <button class="add-habit" id="addBtn">+ New habit</button>
+      </div>
+
+      <div id="ledger"></div>
+
+      <div class="add-panel" id="addPanel">
+        <form class="form" id="addForm">
+          <div class="field" style="grid-column:1">
+            <label for="nameIn">Habit name</label>
+            <input id="nameIn" maxlength="42" placeholder="e.g. YouTube video" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="emojiIn">Icon</label>
+            <input id="emojiIn" maxlength="200" placeholder="emoji or image URL" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="goalIn">Days / wk</label>
+            <input id="goalIn" type="number" min="1" max="7" value="7" inputmode="numeric">
+          </div>
+          <button class="btn-save" type="submit">Add</button>
+        </form>
+      </div>
+
+    </section>
+
+    <aside class="sidebar">
+
+      <div class="card" style="--i:0">
+        <div class="card-head">
+          <h3>Funds</h3>
+          <a class="btn-ghost fund-detail" href="#/money" title="Open funds ledger">Detail &rarr;</a>
+        </div>
+        <form class="money-form" id="moneyForm">
+          <div class="field"><label for="earnIn">Earning</label>
+            <input id="earnIn" type="number" min="0" step="any" placeholder="0" inputmode="decimal"></div>
+          <div class="field"><label for="spendIn">Spending</label>
+            <input id="spendIn" type="number" min="0" step="any" placeholder="0" inputmode="decimal"></div>
+          <button class="btn-save" type="submit" id="moneySave">Log</button>
+        </form>
+        <div class="money-editline" id="moneyEditLine"></div>
+        <div class="money-totals">
+          <div class="mt"><span class="mt-v good" id="earnTotal">—</span><span class="mt-k">Earned all-time</span></div>
+          <div class="mt"><span class="mt-v bad" id="spendTotal">—</span><span class="mt-k">Spent all-time</span></div>
+        </div>
+        <div class="chart-label">Net · last 14 days · click a bar to edit</div>
+        <div class="money-chart" id="moneyChart"></div>
+      </div>
+
+      <div class="card" style="--i:1">
+        <h3>Activity · 16 weeks</h3>
+        <div class="heat" id="heat"></div>
+        <div class="heat-legend">
+          <span>less</span>
+          <span class="sw"></span>
+          <span class="sw s1"></span>
+          <span class="sw s2"></span>
+          <span class="sw s3"></span>
+          <span>more</span>
+        </div>
+      </div>
+
+      <div class="card" style="--i:2">
+        <h3>Data</h3>
+        <div class="tools">
+          <button class="btn-ghost" id="exportBtn">Export</button>
+          <button class="btn-ghost" id="importBtn">Import</button>
+          <button class="btn-ghost" id="clearBtn">Reset</button>
+        </div>
+        <input type="file" id="importFile" accept="application/json" style="display:none">
+      </div>
+
+    </aside>
+
+  </main>
+
+  </div>
+
+  <div id="viewDetail" hidden></div>
+
+  <footer>
+    <span>LEDGER<span class="dot">_</span>OS · your data stays in this browser.</span>
+    <span>Local storage · free forever</span>
+  </footer>
+
+</div>
+
+<!-- ASSET VERSION: bump ?v=N in ALL css/js links below on every code change to bust browser cache -->
+<script src="js/store.js?v=20"></script>
+<script src="js/theme.js?v=20"></script>
+<script src="js/money.js?v=20"></script>
+<script src="js/app.js?v=20"></script>
+</body>
+</html>
